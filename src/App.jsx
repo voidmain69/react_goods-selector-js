@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
@@ -16,21 +17,23 @@ export const goods = [
 ];
 
 export const App = () => {
-  const [activeGood, setGood] = useState('Jam');
+  const [selectedGood, setSelectedGood] = useState('Jam');
+
+  const resetGood = () => setSelectedGood('');
 
   return (
     <main className="section container">
-      {activeGood === '' ? (
+      {!selectedGood ? (
         <h1 className="title is-flex is-align-items-center">
           No goods selected
         </h1>
       ) : (
         <h1 className="title is-flex is-align-items-center">
-          {activeGood} is selected
+          {selectedGood} is selected
           <button
             data-cy="ClearButton"
             type="button"
-            onClick={() => setGood('')}
+            onClick={resetGood}
             className="delete ml-3"
           />
         </h1>
@@ -39,23 +42,21 @@ export const App = () => {
       <table className="table">
         <tbody>
           {goods.map(good => {
-            const isActiveBtn = activeGood === good;
+            const isActiveBtn = selectedGood === good;
 
             return (
               <tr
                 data-cy="Good"
-                className={
-                  good === activeGood ? 'has-background-success-light' : ''
-                }
+                className={cn({ 'has-background-success-light': isActiveBtn })}
                 key={good}
               >
                 <td>
                   <button
                     data-cy={isActiveBtn ? 'RemoveButton' : 'AddButton'}
                     type="button"
-                    className={`button${isActiveBtn ? ' is-info' : ''}`}
+                    className={cn('button', { 'is-info': isActiveBtn })}
                     onClick={() => {
-                      setGood(isActiveBtn ? '' : good);
+                      setSelectedGood(isActiveBtn ? '' : good);
                     }}
                   >
                     {isActiveBtn ? '-' : '+'}
